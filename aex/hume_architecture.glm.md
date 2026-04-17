@@ -164,8 +164,8 @@ nn.Module
 
 ### 5.1 System 2 — 慢思考路径
 
-**文件:** [modeling_hume.py:1009](src/hume/models/modeling_hume.py#L1009)
-**配置:** [configuration_hume.py](src/hume/models/configuration_hume.py)
+**文件:** [modeling_hume.py:1009](../src/hume/models/modeling_hume.py#L1009)
+**配置:** [configuration_hume.py](../src/hume/models/configuration_hume.py)
 
 System 2 是一个基于 Flow Matching 的扩散模型，使用 PaliGemma 作为骨干网络：
 
@@ -203,7 +203,7 @@ for step in range(num_steps):  # 默认 10 步
 
 ### 5.2 System 1 — 快反应路径
 
-**文件:** [modeling_hume.py:1331](src/hume/models/modeling_hume.py#L1331)
+**文件:** [modeling_hume.py:1331](../src/hume/models/modeling_hume.py#L1331)
 
 System 1 是一个轻量化的视觉-动作模型，使用 DINOv2 替代 SigLIP/PaliGemma：
 
@@ -227,7 +227,7 @@ System 1 是一个轻量化的视觉-动作模型，使用 DINOv2 替代 SigLIP/
 
 ### 5.3 Value Query Head (VQH)
 
-**文件:** [modeling_hume.py:1620](src/hume/models/modeling_hume.py#L1620), [value_query.py](src/hume/models/value_query.py)
+**文件:** [modeling_hume.py:1620](../src/hume/models/modeling_hume.py#L1620), [value_query.py](../src/hume/models/value_query.py)
 
 VQH 是一个基于 RL 的决策模块，负责评估和选择 System 2 生成的候选动作：
 
@@ -340,8 +340,8 @@ LeRobot 格式数据集，每个 batch 包含：
 
 ### 7.2 服务端
 
-**入口:** [serve_policy.py](src/hume/serve_policy.py)
-**实现:** [websocket_policy_server.py](src/hume/serving/websocket_policy_server.py)
+**入口:** [serve_policy.py](../src/hume/serve_policy.py)
+**实现:** [websocket_policy_server.py](../src/hume/serving/websocket_policy_server.py)
 
 ```bash
 # 启动服务
