@@ -90,6 +90,16 @@
 
 ---
 
+- 全局时序图 — 环境 ↔ HumePolicy ↔ System2 ↔ VQH ↔ System1 的 UML 交互图
+- Phase 0: 观测预处理 — 状态历史维护、numpy→torch 格式转换、stamp 计算
+- Phase 1: 通用预处理 — prepare_images/prepare_state/prepare_language 的每步 shape
+- Phase 2: System 2 候选生成 — SigLIP 编码 → KV Cache 填充 → 后缀编码 → 10 步 EDM 欧拉去噪的逐层 shape，包括注意力掩码的可视化
+- Phase 3: VQH 候选评估 — query embedding 插入机制 → VQHBackbone (4层) → CalQL 双 Critic MLP (2398→256→256→1) → argmax Q 选择
+- Phase 4: System 1 细粒度去噪 — DINOv2 (ImageNet归一化) → 5帧状态历史+stamp+动作 → FastVisuoExpert (8层) → 1步 Flow Matching
+- Phase 5: 后处理与动作返回
+
+---
+
 ## Phase 0: 观测预处理 (`HumePolicy.infer`)
 
 **源码:** `src/hume/models/modeling_hume.py:282-369`
