@@ -906,6 +906,27 @@ infer_config = {
 }
 ```
 
+### 8.5 推理框架依赖
+
+Hume 为纯 PyTorch + HuggingFace 生态项目，不依赖 ONNX、TensorRT、vLLM 等专用推理引擎，所有推理均通过标准 PyTorch 前向传播完成。
+
+| 框架 | 版本 | 角色 | 使用位置 |
+|------|------|------|---------|
+| **PyTorch** | 2.6.0 | 核心张量运算、模型定义、推理执行 | 所有模型与训练文件 |
+| **HuggingFace Transformers** | git pinned | VLM 骨干网络 (PaliGemma, Gemma, DINOv2)、Tokenizer | `src/hume/models/` 全部模型文件 |
+| **HuggingFace LeRobot** | git pinned | Policy 基类、Config、Checkpoint 管理 | 模型、配置、训练、Serving |
+| **Accelerate** | 1.5.2 | 分布式/多 GPU 训练 | `train_s2.py`, `train_vqh_s1.py` |
+| **Safetensors** | (传递依赖) | 模型权重序列化 | `lerobot_patch.py` |
+| **TorchVision** | 0.21.0 | 图像预处理 (resize, normalize) | 模型文件、训练 transforms |
+| **OpenPI Client** | 本地包 | WebSocket 策略服务部署 | `serving/`, `serve_policy.py` |
+
+**各框架在推理中的具体作用:**
+
+- **PyTorch**: 提供 `torch.no_grad()` 推理上下文、Flow Matching 欧拉积分去噪循环、KV-cache 自回归解码、`torch.distributions` 采样
+- **Transformers**: 提供 `PaliGemmaForConditionalGeneration` (System2 视觉-语言编码)、`GemmaForCausalLM` (Expert decoder + VQH backbone)、`Dinov2Model` (System1 视觉编码)、`AutoTokenizer` (语言指令 tokenize)
+- **LeRobot**: 提供 `PreTrainedPolicy` 基类 (HumePolicy 继承)、`Normalize/Unnormalize` (输入输出归一化)、checkpoint 加载 (`from_pretrained`)
+- **OpenPI Client**: 提供 `WebsocketPolicyServer` 包装、`msgpack_numpy` 序列化，用于机器人评测时的网络推理服务
+
 ---
 
 ## 9. 配置系统
